@@ -27,6 +27,9 @@ def _compile_local_prompt(*, feature: str, docs: list[str], message: str) -> str
     )
 
 
+from dotenv import load_dotenv
+
+
 def resolve_prompt(
     client: Any,
     *,
@@ -35,6 +38,8 @@ def resolve_prompt(
     message: str,
     enabled: bool,
 ) -> ResolvedPrompt:
+    if "PYTEST_CURRENT_TEST" not in os.environ:
+        load_dotenv(override=True)
     name = os.getenv("LANGFUSE_PROMPT_NAME", "day13-chat")
     label = os.getenv("LANGFUSE_PROMPT_LABEL", "production")
     text = _compile_local_prompt(feature=feature, docs=docs, message=message)

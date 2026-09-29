@@ -67,3 +67,39 @@ def test_agent_records_prompt_version_with_v4_observation_api(monkeypatch) -> No
     assert span_update["version"] == "3"
     assert propagated[0]["metadata"]["correlation_id"] == "req-12345678"
     assert propagated[-1]["prompt"] is client.prompt
+
+
+def test_child_observations_instrumentation(monkeypatch) -> None:
+    generation_updates: list[dict] = []
+
+    class MockClient:
+        def update_current_span(self, **kwargs):
+            pass
+
+        def update_current_generation(self, **kwargs):
+            generation_updates.append(kwargs)
+
+    mock_client = MockClient()
+    monkeypatch.setattr(agent_module, "get_langfuse_client", lambda: mock_client)
+    from app import mock_llm, mock_rag
+    monkeypatch.setattr(mock_llm, "get_langfuse_client", lambda: mock_client)
+    monkeypatch.setattr(mock_rag, "get_langfuse_client", lambda: mock_client)
+
+    agent = agent_module.LabAgent()
+    result = agent.run(
+        user_id="u01",
+        feature="qa",
+        session_id="s01",
+        message="Explain observability",
+        correlation_id="req-12345678",
+    )
+    assert len(generation_updates) >= 1
+    gen = generation_updates[-1]
+    assert gen["model"] == "claude-sonnet-4-5"
+    assert "usage_details" in gen
+    assert gen["usage_details"]["input"] > 0
+    assert gen["usage_details"]["output"] > 0
+    assert "cost_details" in gen
+    assert gen["cost_details"]["total"] > 0
+    assert result.latency_ms > 0
+

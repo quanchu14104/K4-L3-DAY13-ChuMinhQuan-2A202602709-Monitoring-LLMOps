@@ -7,7 +7,15 @@ primary_slo:
     total_event: 'event == "request_received"'
   target_percent: 99.5
   error_budget_percent: 0.5
-  note: Học viên phải giải thích hoặc điều chỉnh ngưỡng bằng baseline của mình.
+  explanation: |
+    SLI đo lường tỷ lệ các request được xử lý thành công (response_sent) với độ trễ không vượt quá 3000ms.
+    Baseline bình thường đo được latency P95 ~410-430ms. Ngưỡng 3000ms đủ an toàn để hấp thụ các biến động
+    mạng nhẹ nhưng sẽ phát hiện chính xác khi xảy ra nghẽn (ví dụ incident rag_slow làm độ trễ tăng vọt lên ~2900ms+).
+  error_budget_calculation: |
+    Với cửa sổ 28 ngày (rolling 28-day window), error budget = 100% - 99.5% = 0.5%.
+    Ví dụ trong 100,000 requests nhận được:
+    - Số lượng request 'bad' tối đa cho phép = 100,000 * 0.5% = 500 requests.
+    - Nếu số request bad vượt quá 500, error budget bị cạn kiệt (burn rate > 1x), kích hoạt chính sách đóng băng deploy tính năng mới để tập trung cải thiện reliability.
 guardrails:
   error_rate_pct_max: 2
   daily_cost_usd_max: 2.5

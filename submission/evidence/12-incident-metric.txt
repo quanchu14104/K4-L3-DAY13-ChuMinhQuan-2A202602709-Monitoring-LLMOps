@@ -1,0 +1,15 @@
+=== Incident Detection via Metrics & Dashboard ===
+Scenario: rag_slow (Simulated Knowledge Retrieval Latency Spike)
+Investigation Time Window: 2026-09-29 11:11:00 UTC - 11:12:00 UTC
+
+Baseline Metrics vs Incident Metrics:
+- Baseline Latency P50: 380 ms
+- Baseline Latency P95: 410 ms (Threshold <= 3000 ms) -> NORMAL
+- Incident Latency P50: 5,316 ms
+- Incident Latency P95: 6,376 ms (Threshold <= 3000 ms) -> SLO BREACH VIOLATION!
+
+Alert Triggered:
+- Alert Name: high_latency_p95
+- Condition: latency_p95 > 3000ms
+- Severity: warning
+- Channel: Slack #alerts-llmops

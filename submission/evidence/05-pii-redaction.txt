@@ -1,0 +1,20 @@
+=== PII Redaction Verification ===
+
+[Case 1: Email]
+Raw Input: "What is your refund policy? My email is student@vinuni.edu.vn"
+Sanitized Log: "What is your refund policy? My email is [REDACTED_EMAIL]"
+
+[Case 2: Vietnamese Phone Number]
+Raw Input: "Here is my phone 0987654321, what should be logged?"
+Sanitized Log: "Here is my phone [REDACTED_PHONE_VN], what should be logged?"
+
+[Case 3: Credit Card Number]
+Raw Input: "What is the policy for PII and credit card 4111 1111 1111 1111?"
+Sanitized Log: "What is the policy for PII and credit card [REDACTED_CREDIT_CARD]?"
+
+[Case 4: Vietnamese CCCD]
+Raw Input: "Số CCCD của tôi là 001234567890"
+Sanitized Log: "Số CCCD của tôi là [REDACTED_CCCD]"
+
+Scrubber Location: app/logging_config.py -> registered before JsonlFileProcessor & JSONRenderer.
+Validator Result: 0 PII leaks detected across 130+ requests.

@@ -1,0 +1,5 @@
+=== Incident Log Line Isolation ===
+Correlation ID: req-c7a05c06
+Event: response_sent
+Log Record:
+{"service": "api", "latency_ms": 3591, "ttft_ms": 50, "tokens_in": 36, "tokens_out": 125, "cost_usd": 0.001983, "quality_score": 0.9, "tool_name": "retrieval", "tool_success": true, "payload": {"answer_preview": "Starter answer. You should improve this output logic and add better quality chec..."}, "event": "response_sent", "correlation_id": "req-c7a05c06", "feature": "qa", "model": "claude-sonnet-4-5", "user_id_hash": "2055254ee30a", "env": "dev", "session_id": "s01", "level": "info", "ts": "2026-09-29T11:11:15.342112Z"}
